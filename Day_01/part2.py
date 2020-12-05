@@ -6,6 +6,10 @@ r = []
 
 while content:
     a = content.pop()
-    r.extend([(x + a, x * a) for x in content if (x + a < 2020)])
+    content2 = content.copy()
+    while content2:
+        b = content2.pop()
+        if a + b < 2020:
+            r.extend([(x, a, b, x * a * b) for x in content2 if (x + a + b == 2020)])
 
 print(r)
