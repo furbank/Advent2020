@@ -1,32 +1,5 @@
-with open("Day_04\input.txt") as f:
-    data = f.read().split('\n\n')
-
-# check for and remove trailing whitespace
-data[-1] = data[-1].rstrip()
-
-# "tidy" data
-data = [c.replace('\n',' ') for c in data]
-data = [c.split(' ') for c in data]
-
-# get list of dictionaries
-data = [dict([(kv.split(':')[0],kv.split(':')[1]) for kv in passport if kv.split(':')[0] != 'cid']) for passport in data]
-
-# byr (Birth Year) - four digits; at least 1920 and at most 2002.
-# iyr (Issue Year) - four digits; at least 2010 and at most 2020.
-# eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
-# hgt (Height) - a number followed by either cm or in:
-#     If cm, the number must be at least 150 and at most 193.
-#     If in, the number must be at least 59 and at most 76.
-# hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
-# ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
-# pid (Passport ID) - a nine-digit number, including leading zeroes.
-# cid (Country ID) - ignored, missing or not.
-
 def check_year(value_year, min_year, max_year):
-    if value_year.isnumeric():
-        if min_year <= int(value_year) <= max_year:
-            return True
-    return False
+    return value_year.isnumeric() and min_year <= int(value_year) <= max_year
 
 def check_hight(value_hight):
     unit = value_hight[-2:]
@@ -64,5 +37,20 @@ def check_passport(data):
             check_pid(data['pid'])
     ])
 
+# load data
+with open("Day_04\input.txt") as f:
+    data = f.read().split('\n\n')
+
+# check for and remove trailing whitespace
+data[-1] = data[-1].rstrip()
+
+# parse data
+data = [c.replace('\n',' ') for c in data]
+data = [c.split(' ') for c in data]
+
+# make into a list of dictionaries
+data = [dict([(kv.split(':')[0],kv.split(':')[1]) for kv in passport if kv.split(':')[0] != 'cid']) for passport in data]
+
+# validate and count
 print(len([d for d in data if len(d) == 7 and check_passport(d)]))
 
