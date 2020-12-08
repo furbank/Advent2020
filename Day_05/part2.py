@@ -5,4 +5,5 @@ with open("Day_05\input") as f:
 data = [(int(d[:7].replace('B','1').replace('F','0'),2), int(d[7:].replace('R','1').replace('L','0'),2)) for d in data]
 data = [d[0]*8+d[1] for d in data]
 data.sort()
-print (data)
+
+print(min([d[0] for d in list(enumerate(data, min(data))) if d[0] != d[1]]))
