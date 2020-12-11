@@ -1,9 +1,9 @@
 with open("Day_09\input") as f:
     data = f.read().splitlines()
-
 data = list(enumerate([int(d) for d in data]))
 
 preamble = 25
+
 for d in [d for d in data[preamble:]]:
     offset = d[0]
     check = d[1]
@@ -12,5 +12,3 @@ for d in [d for d in data[preamble:]]:
     if check not in candidates:
         print('First no match:', d[1], 'at position:', d[0])
         break
-
-
