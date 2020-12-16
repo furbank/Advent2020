@@ -1,57 +1,43 @@
 with open("Day_11\input") as f:
     data = f.read().splitlines()
 
-import numpy as np
+def IsSeatGood(row, col, maxOcc, plan):
+    import numpy as np
 
-a = np.array([[col for col in row] for row in data])
+    plan = np.array([[col for col in row] for row in plan])
 
-print(a)
-print()
+    lenCol = len(plan[0,:])
+    lenRow = len(plan[:,0])
+    maxCol = lenCol -1
+    maxRow = lenRow -1
 
-row =15
-col =34
+    print('maxCol:', maxCol)
+    print('maxRow:', maxRow)
 
-lenCol = len(a[0,:])
-lenRow = len(a[:,0])
-maxCol = lenCol -1
-maxRow = lenRow -1
+    print('lenRow:', lenRow)
+    print('lenCol:', lenCol)
 
-print('maxCol:', maxCol)
-print('maxRow:', maxRow)
+    print(plan[row, col])
 
-print('lenRow:', lenRow)
-print('lenCol:', lenCol)
+    print('Horizontal')
+    print(plan[row, :])
 
-print(a[row, col])
+    print('Vertical')
+    print(plan[:,col])
 
-print('Horizontal')
-print(a[row, :])
+    print('Left diagonal')
+    lOffset = col - row
+    print('Left Offset:', lOffset)
+    print(plan.diagonal(lOffset))
 
-print('Vertical')
-print(a[:,col])
+    print('Right diagonal')
+    rOffset = (lenRow - col) - row
+    print('Right Offset:', rOffset)
+    print(np.fliplr(plan).diagonal(rOffset))
 
-print('Left diagonal')
-lOffset = col - row
-print('Left Offset:', lOffset)
-print(a.diagonal(lOffset))
 
-print('Right diagonal')
-rOffset = (lenRow - col) - row
-print('Right Offset:', rOffset)
-print(np.fliplr(a).diagonal(rOffset))
-
-# def IsSeatGood(row, col, maxOcc, plan):
-#     minRow = 0
-#     maxRow = len(plan)-1
-#     minCol = 0
-#     maxCol = len(plan[0])-1
-
-#     #Check n
-#     while n != '.':
-#         i -= 1
-#         print(plan[row + i][col])
-
-#     # Row -1
+#IsSeatGood(15, 34, 5, data)
+IsSeatGood(94, 83, 5, data)
 
 
 
