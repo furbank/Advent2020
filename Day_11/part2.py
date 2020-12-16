@@ -6,40 +6,42 @@ def IsSeatGood(row, col, maxOcc, plan):
 
     plan = np.array([[col for col in row] for row in plan])
 
+    occupied = 0
     lenCol = len(plan[0,:])
     lenRow = len(plan[:,0])
     maxCol = lenCol -1
     maxRow = lenRow -1
 
-    print('maxCol:', maxCol)
-    print('maxRow:', maxRow)
+    #Slice line of sight out of plan
+    #Horizontal
+    losH = plan[row, :]
 
-    print('lenRow:', lenRow)
-    print('lenCol:', lenCol)
+    #Vertical
+    losV = plan[:,col]
 
-    print(plan[row, col])
-
-    print('Horizontal')
-    print(plan[row, :])
-
-    print('Vertical')
-    print(plan[:,col])
-
-    print('Left diagonal')
+    #Left diagonal
     lOffset = col - row
-    print('Left Offset:', lOffset)
-    print(plan.diagonal(lOffset))
+    losLD = plan.diagonal(lOffset)
 
-    print('Right diagonal')
+    #Right diagonal
     rOffset = (lenRow - col) - row
-    print('Right Offset:', rOffset)
-    print(np.fliplr(plan).diagonal(rOffset))
+    losRD = np.fliplr(plan).diagonal(rOffset)
 
+    los = []
+    #flip start slice so they can all be processed the same
+    los.append(list(np.flip(losH[:col])))
+    los.append(list(losH[col+1:]))
+    los.append(list(np.flip(losV[:row])))
+    los.append(list(losV[row+1:]))
+    los.append(list(np.flip(losLD[:col])))
+    los.append(list(losLD[col+1:]))
+    los.append(list(np.flip(losRD[:row])))
+    los.append(list(losRD[row+1:]))
 
-#IsSeatGood(15, 34, 5, data)
-IsSeatGood(94, 83, 5, data)
+    vis = [[f for f in l if f != '.'] for l in los if l != []]
+    return ([v[0] for v in vis if v != []].count('#')) < maxOcc
 
-
+print(IsSeatGood(10, 96, 5, data))
 
 # plan = data.copy()
 # oldPlan = data.copy()
