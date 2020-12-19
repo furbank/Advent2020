@@ -1,70 +1,81 @@
-# This seemed like a good puzzle to create a class for and work with objects
+# This came together a lot quicker than I expected :)
 with open("Day_12\input") as f:
     data = f.read().splitlines()
 
 #data = ['F10', 'N3', 'F7', 'R90', 'F11']
 
 class Boat:
-
-    def __init__(self, startNorth, startEast, heading):
-        self.heading = int(heading)
+    def __init__(self, startNorth, startEast):
         self.startNorth = int(startNorth)
         self.startEast = int(startEast)
         self.posNorth = int(startNorth)
         self.posEast = int(startEast)
+        self.wp = Waypoint(1, 10)
 
-    def Move(self, instruction):
+    def ProcessInstruction(self, instruction):
+        if instruction[0] == 'F':
+            self.MoveForward(int(instruction[1:]))
+        else:
+            self.wp.MoveRelative(instruction)
+
+    def MoveForward(self, distance):
+        self.posNorth += distance * self.wp.GetRelativeNorth()
+        self.posEast += distance * self.wp.GetRelativeEast()
+
+    def ManhattanDistance(self):
+        return abs(self.posNorth) + abs(self.posEast)
+
+
+class Waypoint:
+    def __init__(self, relativeNorth, relativeEast):
+        self.relNorth = int(relativeNorth)
+        self.relEast = int(relativeEast)
+
+    def MoveRelative(self, instruction):
 
         self.moveCommand = {
             'N':self.MoveNorth,
             'S':self.MoveSouth,
             'E':self.MoveEast,
             'W':self.MoveWest,
-            'L':self.TurnLeft,
-            'R':self.TurnRight,
-            'F':self.MoveForward
+            'L':self.RotateLeft,
+            'R':self.RotateRight
         }
         self.moveCommand[instruction[0]](int(instruction[1:]))
 
-    def TurnLeft(self, amount):
-        # print(f'Change heading anti-clockwise {amount} degrees')
-        self.heading = (self.heading - amount) % 360
+    def GetRelativeNorth(self):
+        return self.relNorth
 
-    def TurnRight(self, amount):
-        # print(f'Change heading clockwise {amount} degrees')
-        self.heading = (self.heading + amount) % 360
+    def GetRelativeEast(self):
+        return self.relEast
+
+    def RotateLeft(self, amount):
+        for self._i in range(int(amount/90)):
+            self._tmpN = self.relNorth
+            self._tmpE = self.relEast
+            self.relNorth = self._tmpE
+            self.relEast = - self._tmpN
+
+    def RotateRight(self, amount):
+        for self._i in range(int(amount/90)):
+            self._tmpN = self.relNorth
+            self._tmpE = self.relEast
+            self.relNorth = - self._tmpE
+            self.relEast = self._tmpN
+
 
     def MoveNorth(self, distance):
-        # print(f'Move north {distance} units')
-        self.posNorth += distance
+        self.relNorth += distance
 
     def MoveSouth(self, distance):
-        # print(f'Move south {distance} units')
-        self.posNorth -= distance
+        self.relNorth -= distance
 
     def MoveEast(self, distance):
-        # print(f'Move east {distance} units')
-        self.posEast += distance
+        self.relEast += distance
 
     def MoveWest(self, distance):
-        # print(f'Move west {distance} units')
-        self.posEast -= distance
+        self.relEast -= distance
 
-    def MoveForward(self, distance):
-        # print(f'Move forward {distance} units')
-        # print('heading:', self.heading)
-
-        orientation = {
-            0: self.MoveNorth,
-            90: self.MoveEast,
-            180: self.MoveSouth,
-            270: self.MoveWest
-        }
-        orientation[self.heading](distance)
-
-    def ManhattanDistance(self):
-        return abs(self.posNorth) + abs(self.posEast)
-
-a = Boat(0, 0, 90)
-[a.Move(d) for d in data]
+a = Boat(0, 0)
+[a.ProcessInstruction(d) for d in data]
 print(a.ManhattanDistance())
