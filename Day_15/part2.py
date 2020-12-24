@@ -1,14 +1,24 @@
 data = [15,12,0,14,3,1]
 
-def NextNumber(hist):
-    h = hist.copy()
-    if h.count(h[-1]) == 1: return 0
+hist = {}
+aTurn = 0
 
-    h.reverse()
-    return h[1:].index(h[0]) + 1
+for d in data[:-1]:
+    aTurn += 1
+    hist[d] = aTurn
 
-while len(data) < 2020:
-    data.append(NextNumber(data))
+aNum = data[-1]
+bNum = 0
+aTurn += 1
 
-print(data[-1])
+while aTurn < 30000000:
+    if aNum in hist:
+        bNum = aTurn - hist[aNum]
+    else:
+        bNum = 0
 
+    hist[aNum] = aTurn
+    aTurn += 1
+    aNum = bNum
+
+print('On turn {} the number spoken is {}'.format(aTurn, aNum))
